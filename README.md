@@ -62,7 +62,7 @@ result = UCLlast16Draw.new(participants)
 Until now you can do 3 things.
 1. Generate possible opponent each team following regulation.
 2. Generate random draw.
-3. Calculate all fixture possibilites.
+3. Calculate all fixture possibilities.
 
 ***
 
