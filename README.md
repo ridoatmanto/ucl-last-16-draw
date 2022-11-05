@@ -3,7 +3,8 @@ Help you generate all possible fixture between all participants.
 
 Main Regulation before last 16 draw fixture.
 1. Participants split by two group. Group winners and Group runner up list.
-2. Teams from the same country and same group stage cannot face each other.
+2. The group winner can only meet the runner up.
+3. Teams from the same country and same group stage cannot face each other.
 
 ***
 
