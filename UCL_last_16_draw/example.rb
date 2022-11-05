@@ -37,4 +37,4 @@ puts "\tTotal Possibilities : #{all[:total]}"
 
 puts result.generate_draw_by_value(all[:last_draw], all[:total])
 
-puts "Created by Rido Atmanto (https://github.com/RidoAtmanto)"
+puts "Created by Rido Atmanto (https://github.com/ridoatmanto/ucl-last-16-draw)"
