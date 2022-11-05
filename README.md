@@ -2,7 +2,7 @@
 Help you generate all possible fixture between all participants.
 
 Main Regulation before last 16 draw fixture.
-1. Participant split by two group. Group winners and Group runner up list.
+1. Participants split by two group. Group winners and Group runner up list.
 2. Teams from the same country and same group stage cannot face each other.
 
 ***
@@ -11,7 +11,7 @@ Main Regulation before last 16 draw fixture.
 
 **Option 1:**
 1. Download this repo.
-2. Open file `example.rb` on you favourite command line terminal
+2. Open file `example.rb` on you favourite command line(CLI) terminal
 3. Make sure your operating system has ruby in it.
 ```
 ~ ruby example.rb
@@ -59,7 +59,7 @@ result = UCLlast16Draw.new(participants)
 ```
 
 Until now you can do 3 things.
-1. Generate possible opponent each team follow regulation.
+1. Generate possible opponent each team following regulation.
 2. Generate random draw.
 3. Calculate all fixture possibilites.
 
@@ -172,7 +172,7 @@ output given
 
 ```
 all = result.all_possibilities
-puts "\tTotal Possibilities : #{all[:total]}"
+puts "Total Possibilities : #{all[:total]}"
 ```
 output given 
 ```
