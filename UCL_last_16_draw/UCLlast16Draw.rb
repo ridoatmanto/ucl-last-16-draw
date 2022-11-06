@@ -5,6 +5,11 @@ class UCLlast16Draw
   def initialize(participants)
     @group_winners = participants.select{ |x| x[:status] == "group_winner" }
     @runner_up     = participants.select{ |x| x[:status] == "runner_up" }
+    @possibilities_header_label = "UEFA Champions League Possible Opponent each team"
+    @possibilities_header_width = 55
+    @draw_header_label   = "UEFA Champions League Sample Draw (last 16 Round)"
+    @draw_header_width   = 80
+    @max_center_position = 35
   end
 
   def opponent_candidate(participants, candidate)
@@ -12,9 +17,7 @@ class UCLlast16Draw
   end
 
   def header(title, area_width)
-    header = "\n"
-    header += "\t"
-    header += title.center(area_width)
+    header = "\n\t" + title.center(area_width)
     header += "\n\t" + ("_" * area_width).center(area_width) + "\n\n"
     
     header
@@ -22,7 +25,7 @@ class UCLlast16Draw
 
   def generate_draw
     winners = @group_winners.clone
-    draw = []
+    draw    = []
 
     while draw.empty?
       available_runner_up = @runner_up.clone
@@ -40,98 +43,76 @@ class UCLlast16Draw
       end
     end
 
-    generate_draw_by_value(draw, 1)
+    generate_draw_by_value(draw)
   end
 
-  def generate_draw_by_value(draw, index)
-    text = header("UEFA Champions League Sample Draw (last 16 Round) ##{index.to_s}", 80)
-    draw.each do |x|
-      item      = x.first
-      candidate = x.last
+  def generate_draw_by_value(draw, index=1)
+    text = header(@draw_header_label + " ##{index.to_s}", @draw_header_width)
 
-      max_position = 35
-      winner = "#{item[:name]} (#{item[:country]})/Group #{item[:group]}"
+    draw.each do |x|
+      winner      = x.first
+      runner_up   = x.last
+      winner_text = "#{winner[:name]} (#{winner[:country]})/Group #{winner[:group]}"
       
-      text += "\t".ljust(max_position-winner.length)
-      text += "#{item[:name]} (#{item[:country]})/Group #{item[:group]}"
-      text += "  vs  "
-      text += "#{candidate[:name]} (#{candidate[:country]})/Group #{candidate[:group]}\n\n"
+      text += "\t".ljust(@max_center_position-winner_text.length)
+      text += "#{winner[:name]} (#{winner[:country]})/Group #{winner[:group]}  vs  "
+      text += "#{runner_up[:name]} (#{runner_up[:country]})/Group #{runner_up[:group]}\n\n"
     end
 
     text + "\n"
   end
 
   def opponent_possibilities
-    text = header("UEFA Champions League Possible Opponent each team", 55)
+    text = header(@possibilities_header_label, @possibilities_header_width)
 
     @group_winners.shuffle.each do |item|
-      beginning = 1
       prefiks = "\t#{item[:name]} (#{item[:country]}) VS "
+      text   += prefiks
       
-      opponent_candidate(@runner_up, item).map do |x|
-        temp = ""
-        if (beginning == 1)
-            temp += prefiks
-            beginning = 0
-        else
-            temp += "\t" + (" " * (prefiks.length-1))
-        end
-
-        temp += "#{x[:name]} (#{x[:country]})\n"
-        text += temp
+      opponent_candidate(@runner_up, item).each_with_index do |x, index|
+        text += "\t" + (" " * (prefiks.length-1)) if (index > 0)
+        text += "#{x[:name]} (#{x[:country]})\n"
       end
 
-      text += "\n\n"
+      text += "\n"
     end
 
     text
   end
 
   def all_possibilities
-    text          = "\n"
-    number        = 1
-    winners       = @group_winners.clone
-    runner_up     = @runner_up.clone
+    # Collecting all possibilities by winner
+    winners   = @group_winners.clone
+    runner_up = @runner_up.clone
     possibilities = []
 
-    # Collecting all possibilities
     winners.length.times do
       reserved_candidate_by_club = {}
 
       winners.each do |item|
-          candidate = opponent_candidate(runner_up, item)
-          reserved_candidate_by_club[item] = candidate
+        reserved_candidate_by_club[item] = opponent_candidate(runner_up, item)
       end
 
       possibilities.push(reserved_candidate_by_club)
       winners = winners.rotate(1)
     end
 
-    all_combinations = []
-    total            = 0
-    all              = []
-
     # Create General Draw by available candidate
+    all_combinations = []
+    
     possibilities.each_with_index do |value, index|
       reserved = []
 
-      value.each do |k, v|
-        temp = []
-        v.each do |item|
-            temp.push([k,item])
-        end
-        reserved.push(temp)
+      value.each do |winner, candidate_list|
+        reserved.push(candidate_list.map {|candidate| [winner, candidate] })
       end
 
       get_all_combination(*reserved).each do |item|
-        if check_valid_draw(item)
-          all_combinations.push(item)
-          total = total + 1 
-        end
+        all_combinations.push(item) if check_valid_draw(item)
       end
     end
 
-    {total: format_number(total), last_draw: all_combinations[total-1]}
+    {total: format_number(all_combinations.size), last_draw: all_combinations.last}
   end
 
   def get_all_combination(*arr)
@@ -142,11 +123,8 @@ class UCLlast16Draw
     reserved_opponent = []
 
     arr.each_with_index do |item, index|
-      if reserved_opponent.include?(item.last)
-        return false
-      else
-        reserved_opponent.push(item.last)   
-      end
+      return false if reserved_opponent.include?(item.last)
+      reserved_opponent.push(item.last)
     end
 
     true

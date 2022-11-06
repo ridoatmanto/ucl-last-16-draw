@@ -31,7 +31,6 @@ result = UCLlast16Draw.new(participants)
 puts result.opponent_possibilities
 puts result.generate_draw
 
-
 all = result.all_possibilities
 puts "\tTotal Possibilities : #{all[:total]}"
 
