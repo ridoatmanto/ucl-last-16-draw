@@ -1,7 +1,7 @@
 # UEFA Champions League last 16 draw
 Help you generate all possible fixture between all participants.
 
-Main Regulation before last 16 draw fixture.
+Main Regulation last 16 draw fixture:
 1. Participants split by two group. Group winners and Group runner up list.
 2. The group winner can only meet the runner up.
 3. Teams from the same country and same group stage cannot face each other.
@@ -11,8 +11,8 @@ Main Regulation before last 16 draw fixture.
 ### Prepare your own drawing
 
 **Option 1:**
-1. Download this repo.
-2. Open file `example.rb` on you favourite command line(CLI) terminal
+1. Download this repository.
+2. Open file `example.rb` on you favourite command line(CLI) terminal.
 3. Make sure your operating system has ruby in it.
 ```
 ~ ruby example.rb
@@ -23,7 +23,7 @@ Doing it manually with more explanation.
 
 Collect UEFA Champions League season 2022/2023 participants data and convert into similar format below.
 
-Sample data :
+Sample data(but actually real data):
 ```
 participants = [
   {status: "group_winner", group: "A", name: "Napoli", country: "ITA"},
@@ -207,7 +207,13 @@ output given
                  Real Madrid (ESP)/Group F  vs  Liverpool (ENG)/Group A
 
              Manchester City (ENG)/Group G  vs  Club Brugge (BEL)/Group B
-``` 
+```
+
+## Note:
+* My algorithm in the next schedule iteration, the First winner position will be set in the last one to make it more fair. It will give more opportunity to get largest opponent candidate pool.
+* More wild result will be given if winners order randomized. I didn't apply it yet.
+
+***
 
 Enjoy it!
 
